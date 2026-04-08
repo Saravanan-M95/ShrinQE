@@ -28,7 +28,7 @@ const User = sequelize.define('User', {
     allowNull: true,
   },
   provider: {
-    type: DataTypes.ENUM('local', 'google', 'microsoft'),
+    type: DataTypes.ENUM('local', 'google'),
     defaultValue: 'local',
   },
   providerId: {

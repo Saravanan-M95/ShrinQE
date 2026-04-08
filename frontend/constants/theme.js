@@ -54,7 +54,6 @@ export const Colors = {
 
   // Social
   google: '#EA4335',
-  microsoft: '#00A4EF',
 };
 
 export const Spacing = {

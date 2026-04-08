@@ -77,7 +77,7 @@ export default function SettingsPage() {
                 <Text style={styles.profileEmail}>{user?.email}</Text>
                 <View style={styles.providerBadge}>
                   <Ionicons
-                    name={user?.provider === 'google' ? 'logo-google' : user?.provider === 'microsoft' ? 'logo-microsoft' : 'mail-outline'}
+                    name={user?.provider === 'google' ? 'logo-google' : 'mail-outline'}
                     size={12}
                     color={Colors.textMuted}
                   />

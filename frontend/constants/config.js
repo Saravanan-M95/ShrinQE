@@ -25,6 +25,5 @@ export const ADSENSE_PUBLISHER_ID = ''; // Add your AdSense publisher ID
 
 // OAuth redirect URIs
 export const GOOGLE_OAUTH_URL = `${API_URL}/api/auth/google`;
-export const MICROSOFT_OAUTH_URL = `${API_URL}/api/auth/microsoft`;
 
 export default config;

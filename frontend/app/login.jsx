@@ -10,7 +10,7 @@ import Header from '../components/layout/Header';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import { useAuth } from '../contexts/AuthContext';
-import { GOOGLE_OAUTH_URL, MICROSOFT_OAUTH_URL } from '../constants/config';
+import { GOOGLE_OAUTH_URL } from '../constants/config';
 import { Colors, Spacing, FontSizes, BorderRadius, Shadows } from '../constants/theme';
 
 export default function LoginPage() {
@@ -63,7 +63,8 @@ export default function LoginPage() {
   };
 
   const handleSocialLogin = (provider) => {
-    const url = provider === 'google' ? GOOGLE_OAUTH_URL : MICROSOFT_OAUTH_URL;
+    if (provider !== 'google') return;
+    const url = GOOGLE_OAUTH_URL;
     if (Platform.OS === 'web') {
       window.location.href = url;
     } else {
@@ -108,7 +109,6 @@ export default function LoginPage() {
                   <Ionicons name="alert-circle" size={18} color={Colors.error} />
                   <Text style={styles.alertText}>
                     {params.error === 'google_failed' ? 'Google sign-in failed' :
-                     params.error === 'microsoft_failed' ? 'Microsoft sign-in failed' :
                      'Sign-in failed. Please try again.'}
                   </Text>
                 </View>
@@ -133,17 +133,6 @@ export default function LoginPage() {
                     <Ionicons name="logo-google" size={20} color={Colors.google} />
                   </View>
                   <Text style={styles.socialBtnText}>Continue with Google</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  onPress={() => handleSocialLogin('microsoft')}
-                  style={styles.socialBtn}
-                  activeOpacity={0.7}
-                >
-                  <View style={[styles.socialIconCircle, { backgroundColor: Colors.microsoft + '15' }]}>
-                    <Ionicons name="logo-microsoft" size={20} color={Colors.microsoft} />
-                  </View>
-                  <Text style={styles.socialBtnText}>Continue with Microsoft</Text>
                 </TouchableOpacity>
               </View>
 

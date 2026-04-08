@@ -10,7 +10,7 @@ import Header from '../components/layout/Header';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import { useAuth } from '../contexts/AuthContext';
-import { GOOGLE_OAUTH_URL, MICROSOFT_OAUTH_URL } from '../constants/config';
+import { GOOGLE_OAUTH_URL } from '../constants/config';
 import { Colors, Spacing, FontSizes, BorderRadius, Shadows } from '../constants/theme';
 
 export default function SignupPage() {
@@ -66,7 +66,8 @@ export default function SignupPage() {
   };
 
   const handleSocialLogin = (provider) => {
-    const url = provider === 'google' ? GOOGLE_OAUTH_URL : MICROSOFT_OAUTH_URL;
+    if (provider !== 'google') return;
+    const url = GOOGLE_OAUTH_URL;
     if (Platform.OS === 'web') window.location.href = url;
     else Linking.openURL(url);
   };
@@ -127,12 +128,6 @@ export default function SignupPage() {
                     <Ionicons name="logo-google" size={20} color={Colors.google} />
                   </View>
                   <Text style={styles.socialBtnText}>Sign up with Google</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleSocialLogin('microsoft')} style={styles.socialBtn} activeOpacity={0.7}>
-                  <View style={[styles.socialIconCircle, { backgroundColor: Colors.microsoft + '15' }]}>
-                    <Ionicons name="logo-microsoft" size={20} color={Colors.microsoft} />
-                  </View>
-                  <Text style={styles.socialBtnText}>Sign up with Microsoft</Text>
                 </TouchableOpacity>
               </View>
 

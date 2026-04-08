@@ -57,19 +57,4 @@ router.get(
   oauthCallback
 );
 
-// Microsoft OAuth
-router.get(
-  '/microsoft',
-  passport.authenticate('microsoft', { scope: ['user.read'] })
-);
-
-router.get(
-  '/microsoft/callback',
-  passport.authenticate('microsoft', {
-    session: false,
-    failureRedirect: `${process.env.FRONTEND_URL}/auth/login?error=microsoft_failed`,
-  }),
-  oauthCallback
-);
-
 export default router;

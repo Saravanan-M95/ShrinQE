@@ -22,7 +22,6 @@
     "nanoid": "^5.0.7",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
-    "passport-microsoft": "^2.1.0",
     "pg": "^8.12.0",
     "pg-hstore": "^2.3.4",
     "qrcode": "^1.5.4",

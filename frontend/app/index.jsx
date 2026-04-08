@@ -346,6 +346,42 @@ export default function HomePage() {
         {/* Ad Banner */}
         <AdBanner size="rectangle" />
 
+        {/* FAQ Section */}
+        <View style={styles.faqSection}>
+          <Text style={[styles.sectionTitle, isMobile && styles.sectionTitleMobile]}>
+            Frequently Asked <Text style={styles.sectionTitleAccent}>Questions</Text>
+          </Text>
+          <Text style={styles.sectionSubtitle}>
+            Find answers to common questions about Shrinkly and our services
+          </Text>
+
+          <View style={styles.faqGrid}>
+            {[
+              {
+                q: 'Is Shrinkly free to use?',
+                a: 'Yes! Shrinkly is 100% free for everyone. You can shorten as many URLs as you like and access basic analytics without any cost.',
+              },
+              {
+                q: 'How do I earn revenue with my links?',
+                a: 'By enabling monetization in your dashboard, your links will show a brief interstitial page with high-quality ads. You earn revenue for every verified view.',
+              },
+              {
+                q: 'Are shortened links safe?',
+                a: 'Absolutely. We use automated safety scanners to check every link for malicious content or phishing attempts to protect our users.',
+              },
+              {
+                q: 'Can I track my link performance?',
+                a: 'Yes, every link comes with its own analytics dashboard where you can see clicks, geographic data, device types and more.',
+              },
+            ].map((faq, index) => (
+              <Card key={index} variant="glass" style={styles.faqCard}>
+                <Text style={styles.faqQuestion}>{faq.q}</Text>
+                <Text style={styles.faqAnswer}>{faq.a}</Text>
+              </Card>
+            ))}
+          </View>
+        </View>
+
         {/* CTA Section */}
         <LinearGradient
           colors={['rgba(124, 58, 237, 0.1)', 'rgba(59, 130, 246, 0.05)', 'transparent']}
@@ -700,5 +736,33 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: Spacing.xl,
     maxWidth: 500,
+  },
+  
+  // FAQ
+  faqSection: {
+    paddingVertical: Spacing.xxxl,
+    paddingHorizontal: Spacing.lg,
+    alignItems: 'center',
+    backgroundColor: Colors.bgSecondary,
+  },
+  faqGrid: {
+    width: '100%',
+    maxWidth: 900,
+    gap: Spacing.md,
+  },
+  faqCard: {
+    width: '100%',
+    padding: Spacing.lg,
+  },
+  faqQuestion: {
+    fontSize: FontSizes.md,
+    fontWeight: '700',
+    color: Colors.textPrimary,
+    marginBottom: Spacing.sm,
+  },
+  faqAnswer: {
+    fontSize: FontSizes.sm,
+    color: Colors.textMuted,
+    lineHeight: 22,
   },
 });
