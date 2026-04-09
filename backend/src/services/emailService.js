@@ -21,11 +21,16 @@ const transporter = nodemailer.createTransport({
     user: smtpUser,
     pass: smtpPass,
   },
+  // This is the "Nuclear" fix: Overriding the DNS resolution 
+  // to ONLY ever see IPv4 addresses.
+  lookup: (hostname, options, callback) => {
+    dns.lookup(hostname, { family: 4 }, (err, address, family) => {
+      callback(err, address, family);
+    });
+  },
   connectionTimeout: 10000,
   greetingTimeout: 10000,
   socketTimeout: 10000,
-  // Force IPv4 at the socket level
-  family: 4, 
 });
 
 // Validate credentials on startup
