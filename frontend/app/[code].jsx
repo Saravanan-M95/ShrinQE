@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  View, Text, StyleSheet, Animated, TouchableOpacity, useWindowDimensions, Platform, Linking,
+  View, Text, StyleSheet, Animated, TouchableOpacity, useWindowDimensions, Platform, Linking, ScrollView,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import AdBanner from '../../components/ui/AdBanner';
-import { redirectAPI } from '../../services/api';
-import { Colors, Spacing, FontSizes, BorderRadius, Shadows } from '../../constants/theme';
+import AdBanner from '../components/ui/AdBanner';
+import { redirectAPI } from '../services/api';
+import { Colors, Spacing, FontSizes, BorderRadius, Shadows } from '../constants/theme';
 
 export default function InterstitialPage() {
   const { code } = useLocalSearchParams();

@@ -49,8 +49,8 @@ export const createUrl = async (req, res, next) => {
       expiresAt: expiresAt || null,
     });
 
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
-    const shortUrl = `${backendUrl}/${url.shortCode}`;
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8081';
+    const shortUrl = `${frontendUrl}/${url.shortCode}`;
     const qrCode = await QRCode.toDataURL(shortUrl);
     
     res.status(201).json({
@@ -105,11 +105,11 @@ export const getUserUrls = async (req, res, next) => {
       offset,
     });
 
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8081';
     
     // Generate QR codes for all URLs in the list
     const urlsWithQr = await Promise.all(urls.map(async (u) => {
-      const shortUrl = `${backendUrl}/${u.shortCode}`;
+      const shortUrl = `${frontendUrl}/${u.shortCode}`;
       const qrCode = await QRCode.toDataURL(shortUrl);
       return {
         id: u.id,
@@ -155,8 +155,8 @@ export const getUrlById = async (req, res, next) => {
       });
     }
 
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
-    const shortUrl = `${backendUrl}/${url.shortCode}`;
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8081';
+    const shortUrl = `${frontendUrl}/${url.shortCode}`;
     const qrCode = await QRCode.toDataURL(shortUrl);
 
     res.json({
@@ -203,8 +203,8 @@ export const updateUrl = async (req, res, next) => {
 
     await url.save();
 
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
-    const shortUrl = `${backendUrl}/${url.shortCode}`;
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8081';
+    const shortUrl = `${frontendUrl}/${url.shortCode}`;
     const qrCode = await QRCode.toDataURL(shortUrl);
 
     res.json({
@@ -318,7 +318,7 @@ export const redirectUrl = async (req, res, next) => {
 
     // Redirect to frontend interstitial page
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8081';
-    res.redirect(302, `${frontendUrl}/go/${url.shortCode}`);
+    res.redirect(302, `${frontendUrl}/${url.shortCode}`);
   } catch (error) {
     next(error);
   }
@@ -421,7 +421,7 @@ export const getOverallStats = async (req, res, next) => {
       order: [['clickCount', 'DESC']],
     });
 
-    const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8081';
 
     res.json({
       success: true,
@@ -433,7 +433,7 @@ export const getOverallStats = async (req, res, next) => {
           ? {
               id: topUrl.id,
               shortCode: topUrl.shortCode,
-              shortUrl: `${backendUrl}/${topUrl.shortCode}`,
+              shortUrl: `${frontendUrl}/${topUrl.shortCode}`,
               originalUrl: topUrl.originalUrl,
               title: topUrl.title,
               clickCount: topUrl.clickCount,
