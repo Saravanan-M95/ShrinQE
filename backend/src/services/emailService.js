@@ -17,6 +17,11 @@ export const sendResetPasswordEmail = async (to, otp, name) => {
     throw new Error('Email service configuration missing');
   }
 
+  // Safe debugging: Log length and masked key to confirm Render is passing it correctly
+  console.log(`[EmailService] API Key Length: ${BREVO_API_KEY.length}`);
+  console.log(`[EmailService] API Key Format: ${BREVO_API_KEY.substring(0, 10)}...${BREVO_API_KEY.substring(BREVO_API_KEY.length - 5)}`);
+
+
   const data = {
     sender: { name: SENDER_NAME, email: SENDER_EMAIL },
     to: [{ email: to, name: name }],
