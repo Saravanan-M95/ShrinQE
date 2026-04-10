@@ -30,7 +30,9 @@ export default function VerifyOtpPage() {
         });
       }
     } catch (err) {
-      Alert.alert('Error', err.message || 'Invalid or expired code.');
+      console.log('Verify OTP error:', err);
+      const message = err?.message || 'Invalid or expired code.';
+      Alert.alert('Error', message);
     } finally {
       setIsLoading(false);
     }

@@ -34,7 +34,9 @@ export default function ResetPasswordPage() {
         setIsSuccess(true);
       }
     } catch (err) {
-      Alert.alert('Error', err.message || 'Failed to reset password. Please try again.');
+      console.log('Reset password error:', err);
+      const message = err?.message || 'Failed to reset password. Please try again.';
+      Alert.alert('Error', message);
     } finally {
       setIsLoading(false);
     }
