@@ -30,17 +30,21 @@ export default function ForgotPasswordPage() {
         });
       }
     } catch (err) {
-      if (err.status === 404) {
+      console.log('Forgot password error:', err);
+      const status = err?.status;
+      const message = err?.message || 'Failed to request reset code.';
+
+      if (status === 404) {
         Alert.alert(
           'Account Not Found',
-          err.message,
+          message,
           [
             { text: 'Cancel', style: 'cancel' },
             { text: 'Sign Up', onPress: () => router.push('/signup') },
           ]
         );
       } else {
-        Alert.alert('Error', err.message || 'Failed to request reset code.');
+        Alert.alert('Error', message);
       }
     } finally {
       setIsLoading(false);
