@@ -290,3 +290,25 @@ export const resetPassword = async (req, res, next) => {
     next(error);
   }
 };
+
+export const deleteAccount = async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.user.id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Account not found.',
+      });
+    }
+
+    // Rely on database ON DELETE CASCADE to remove associated URLs and clicks
+    await user.destroy();
+
+    res.json({
+      success: true,
+      message: 'Your account and all associated data have been permanently deleted.',
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -148,6 +148,19 @@ export function AuthProvider({ children }) {
 
   const clearError = useCallback(() => setError(null), []);
 
+  const deleteAccount = useCallback(async () => {
+    try {
+      setError(null);
+      await authAPI.deleteProfile();
+      await logout();
+      return { success: true };
+    } catch (err) {
+      const message = err.message || 'Failed to delete account';
+      setError(message);
+      return { success: false, message };
+    }
+  }, [logout]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -160,6 +173,7 @@ export function AuthProvider({ children }) {
         signup,
         logout,
         updateProfile,
+        deleteAccount,
         handleOAuthToken,
         clearError,
       }}

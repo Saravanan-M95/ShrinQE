@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Spacing, FontSizes, BorderRadius } from '../../constants/theme';
+import { useRouter } from 'expo-router';
 
 export default function Footer() {
   const { width } = useWindowDimensions();
+  const router = useRouter();
   const isMobile = width < 768;
 
   return (
@@ -28,23 +30,22 @@ export default function Footer() {
             <TouchableOpacity onPress={() => router.push('/')}><Text style={styles.linkText}>Link Suite</Text></TouchableOpacity>
             <TouchableOpacity onPress={() => router.push('/tools')}><Text style={styles.linkText}>Image Suite</Text></TouchableOpacity>
             <TouchableOpacity onPress={() => router.push('/dashboard')}><Text style={styles.linkText}>Analytics</Text></TouchableOpacity>
-            <TouchableOpacity onPress={() => router.push('/links')}><Text style={styles.linkText}>QR Codes</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/dashboard')}><Text style={styles.linkText}>QR Codes</Text></TouchableOpacity>
           </View>
 
 
           <View style={styles.linksGroup}>
             <Text style={styles.linksTitle}>Company</Text>
-            <TouchableOpacity><Text style={styles.linkText}>About</Text></TouchableOpacity>
-            <TouchableOpacity><Text style={styles.linkText}>Blog</Text></TouchableOpacity>
-            <TouchableOpacity><Text style={styles.linkText}>Careers</Text></TouchableOpacity>
-            <TouchableOpacity><Text style={styles.linkText}>Contact</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/')}><Text style={styles.linkText}>About</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => Linking.openURL('mailto:saraspace006@gmail.com')}><Text style={styles.linkText}>Support</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => Linking.openURL('mailto:saraspace006@gmail.com')}><Text style={styles.linkText}>Contact</Text></TouchableOpacity>
           </View>
 
           <View style={styles.linksGroup}>
             <Text style={styles.linksTitle}>Legal</Text>
-            <TouchableOpacity><Text style={styles.linkText}>Privacy Policy</Text></TouchableOpacity>
-            <TouchableOpacity><Text style={styles.linkText}>Terms of Service</Text></TouchableOpacity>
-            <TouchableOpacity><Text style={styles.linkText}>Cookie Policy</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/privacy')}><Text style={styles.linkText}>Privacy Policy</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/terms')}><Text style={styles.linkText}>Terms of Service</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/privacy')}><Text style={styles.linkText}>Cookie Policy</Text></TouchableOpacity>
           </View>
         </View>
 
@@ -53,15 +54,7 @@ export default function Footer() {
             © {new Date().getFullYear()} ShrinQE. All rights reserved.
           </Text>
           <View style={styles.socialIcons}>
-            <TouchableOpacity style={styles.socialBtn}>
-              <Ionicons name="logo-twitter" size={18} color={Colors.textMuted} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialBtn}>
-              <Ionicons name="logo-github" size={18} color={Colors.textMuted} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialBtn}>
-              <Ionicons name="logo-linkedin" size={18} color={Colors.textMuted} />
-            </TouchableOpacity>
+            {/* Social icons hidden as per user request */}
           </View>
         </View>
       </View>

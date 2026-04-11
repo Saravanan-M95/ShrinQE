@@ -1,89 +1,116 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Spacing, FontSizes, BorderRadius } from '../../constants/theme';
+import { Colors, Spacing, FontSizes, BorderRadius, Shadows } from '../../constants/theme';
+import Button from '../ui/Button';
 
 /**
- * Themed error/success toast alert — replaces browser's default alert()
+ * Themed error/success modal alert — replaces browser's default alert() and old top toast
  */
-export default function AlertToast({ visible, message, type = 'error', onDismiss, duration = 5000 }) {
-  const slideAnim = useRef(new Animated.Value(-100)).current;
+export default function AlertToast({ visible, message, type = 'error', onDismiss, duration = 0 }) {
+  const scaleAnim = useRef(new Animated.Value(0.9)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
+
+  // Track if we're rendering to prevent unmount glitching
+  const [render, setRender] = React.useState(visible);
 
   useEffect(() => {
     if (visible) {
+      setRender(true);
       Animated.parallel([
-        Animated.spring(slideAnim, { toValue: 0, useNativeDriver: true, tension: 80, friction: 10 }),
+        Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true, tension: 80, friction: 10 }),
         Animated.timing(opacityAnim, { toValue: 1, duration: 200, useNativeDriver: true }),
       ]).start();
-
-      if (duration > 0) {
+      
+      if (duration > 0 && type !== 'error') {
         const timer = setTimeout(() => onDismiss?.(), duration);
         return () => clearTimeout(timer);
       }
     } else {
       Animated.parallel([
-        Animated.timing(slideAnim, { toValue: -100, duration: 250, useNativeDriver: true }),
-        Animated.timing(opacityAnim, { toValue: 0, duration: 250, useNativeDriver: true }),
-      ]).start();
+        Animated.timing(scaleAnim, { toValue: 0.9, duration: 200, useNativeDriver: true }),
+        Animated.timing(opacityAnim, { toValue: 0, duration: 200, useNativeDriver: true }),
+      ]).start(({ finished }) => {
+        if (finished) setRender(false);
+      });
     }
   }, [visible]);
 
-  if (!visible) return null;
+  if (!render) return null;
 
   const isError = type === 'error';
   const iconName = isError ? 'alert-circle' : 'checkmark-circle';
-  const accentColor = isError ? '#EF4444' : Colors.success;
-  const bgColor = isError ? 'rgba(239, 68, 68, 0.12)' : 'rgba(16, 185, 129, 0.12)';
-  const borderColor = isError ? 'rgba(239, 68, 68, 0.3)' : 'rgba(16, 185, 129, 0.3)';
+  const accentColor = isError ? Colors.error : Colors.success;
 
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        {
-          backgroundColor: bgColor,
-          borderColor,
-          transform: [{ translateY: slideAnim }],
-          opacity: opacityAnim,
-        },
-      ]}
-    >
-      <View style={styles.content}>
-        <Ionicons name={iconName} size={20} color={accentColor} />
-        <Text style={[styles.message, { color: accentColor }]} numberOfLines={3}>
-          {message}
-        </Text>
-        <TouchableOpacity onPress={onDismiss} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-          <Ionicons name="close" size={18} color={Colors.textMuted} />
-        </TouchableOpacity>
-      </View>
+    <Animated.View style={[styles.overlay, { opacity: opacityAnim }]}>
+      <Animated.View
+        style={[
+          styles.modalCard,
+          {
+            transform: [{ scale: scaleAnim }],
+          },
+        ]}
+      >
+        <View style={[styles.iconContainer, { backgroundColor: isError ? Colors.errorBg : Colors.successBg }]}>
+          <Ionicons name={iconName} size={48} color={accentColor} />
+        </View>
+        <Text style={styles.title}>{isError ? 'Error' : 'Success'}</Text>
+        <Text style={styles.message}>{message}</Text>
+        <View style={styles.actionRow}>
+          <Button 
+            title="Okay" 
+            onPress={onDismiss} 
+            fullWidth 
+            variant="primary"
+          />
+        </View>
+      </Animated.View>
     </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  overlay: {
     position: 'absolute',
-    top: Spacing.lg,
-    left: Spacing.lg,
-    right: Spacing.lg,
-    zIndex: 9999,
-    borderRadius: BorderRadius.md,
-    borderWidth: 1,
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.lg,
-    backdropFilter: 'blur(12px)',
-  },
-  content: {
-    flexDirection: 'row',
+    top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    zIndex: 99999,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: Spacing.sm + 2,
+    padding: Spacing.xl,
+    backdropFilter: 'blur(5px)',
+  },
+  modalCard: {
+    backgroundColor: Colors.bgCardHover,
+    borderRadius: BorderRadius.xl,
+    padding: Spacing.xl,
+    width: '100%',
+    maxWidth: 380,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.borderLight,
+    ...Shadows.lg,
+  },
+  iconContainer: {
+    marginBottom: Spacing.md,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.full,
+  },
+  title: {
+    fontSize: FontSizes.xl,
+    fontWeight: '700',
+    color: Colors.textPrimary,
+    marginBottom: Spacing.sm,
   },
   message: {
-    flex: 1,
-    fontSize: FontSizes.sm,
-    fontWeight: '600',
-    lineHeight: 20,
+    fontSize: FontSizes.md,
+    color: Colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: Spacing.xl,
+    lineHeight: 22,
   },
+  actionRow: {
+    width: '100%',
+  }
 });

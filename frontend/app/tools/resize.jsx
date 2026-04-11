@@ -12,6 +12,7 @@ import ImageDropZone from '../../components/tools/ImageDropZone';
 import DownloadButton from '../../components/tools/DownloadButton';
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
+import AlertToast from '../../components/tools/AlertToast';
 import { Colors, Spacing, FontSizes, BorderRadius } from '../../constants/theme';
 import { resizeImage, getImageInfo } from '../../services/imageProcessor';
 

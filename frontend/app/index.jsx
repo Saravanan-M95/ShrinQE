@@ -21,6 +21,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { urlAPI } from '../services/api';
 import { Colors, Spacing, FontSizes, BorderRadius, Shadows } from '../constants/theme';
 import { TOOLS_CATEGORIES } from '../constants/tools';
+import AnimatedCounter from '../components/ui/AnimatedCounter';
 
 
 export default function HomePage() {
@@ -42,6 +43,11 @@ export default function HomePage() {
   const slideAnim = useRef(new Animated.Value(30)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const resultAnim = useRef(new Animated.Value(0)).current;
+  const backToTopAnim = useRef(new Animated.Value(0)).current;
+
+  const scrollRef = useRef(null);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const sectionPositions = useRef({});
 
   useEffect(() => {
     Animated.parallel([
@@ -67,6 +73,28 @@ export default function HomePage() {
     pulse.start();
     return () => pulse.stop();
   }, []);
+
+  const handleScroll = (event) => {
+    const y = event.nativeEvent.contentOffset.y;
+    if (y > 600 && !showBackToTop) {
+      setShowBackToTop(true);
+      Animated.spring(backToTopAnim, { toValue: 1, useNativeDriver: true }).start();
+    } else if (y <= 600 && showBackToTop) {
+      setShowBackToTop(false);
+      Animated.timing(backToTopAnim, { toValue: 0, duration: 200, useNativeDriver: true }).start();
+    }
+  };
+
+  const scrollToTop = () => {
+    scrollRef.current?.scrollTo({ y: 0, animated: true });
+  };
+
+  const scrollToCategory = (categoryName) => {
+    const y = sectionPositions.current[categoryName];
+    if (y !== undefined) {
+      scrollRef.current?.scrollTo({ y: y - 80, animated: true });
+    }
+  };
 
   const handleShrink = async () => {
     if (!isAuthenticated) {
@@ -157,9 +185,12 @@ export default function HomePage() {
     <View style={styles.wrapper}>
       <Header />
       <ScrollView
+        ref={scrollRef}
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        scrollEventThrottle={16}
+        onScroll={handleScroll}
       >
         {/* Hero Section */}
         <LinearGradient
@@ -328,6 +359,21 @@ export default function HomePage() {
           </Animated.View>
         </LinearGradient>
 
+        {/* Back to Top Floating Button */}
+        {showBackToTop && (
+          <Animated.View style={[
+            styles.backToTop,
+            { 
+              opacity: backToTopAnim,
+              transform: [{ scale: backToTopAnim }]
+            }
+          ]}>
+            <TouchableOpacity onPress={scrollToTop} style={styles.backToTopInner}>
+              <Ionicons name="arrow-up" size={24} color="#fff" />
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+
 
 
         {/* Stats Section */}
@@ -335,7 +381,7 @@ export default function HomePage() {
           <View style={[styles.statsGrid, isMobile && styles.statsGridMobile]}>
             {stats.map((stat, index) => (
               <View key={index} style={[styles.statItem, isMobile && styles.statItemMobile]}>
-                <Text style={styles.statValue}>{stat.value}</Text>
+                <AnimatedCounter value={stat.value} style={styles.statValue} />
                 <Text style={styles.statLabel}>{stat.label}</Text>
               </View>
             ))}
@@ -379,13 +425,26 @@ export default function HomePage() {
                 color: '#14B8A6',
               },
             ].map((feature, index) => (
-              <Card key={index} variant="glass" style={[styles.featureCard, isMobile && styles.featureCardMobile]}>
-                <View style={[styles.featureIconBg, { backgroundColor: feature.color + '15' }]}>
-                  <Ionicons name={feature.icon} size={28} color={feature.color} />
-                </View>
-                <Text style={styles.featureTitle}>{feature.title}</Text>
-                <Text style={styles.featureDesc}>{feature.desc}</Text>
-              </Card>
+              <TouchableOpacity 
+                key={index} 
+                activeOpacity={0.8}
+                onPress={() => {
+                  if (feature.title.includes('AI')) scrollToCategory('Creative');
+                  else if (feature.title.includes('Analytics')) scrollRef.current?.scrollTo({ y: 0, animated: true });
+                  else if (feature.title.includes('Speed') || feature.title.includes('Fast')) scrollToCategory('Transform');
+                  else if (feature.title.includes('Privacy')) scrollToCategory('Creative');
+                  else scrollToCategory('Transform');
+                }}
+                style={[styles.featureCardWrap, isMobile && styles.featureCardMobile]}
+              >
+                <Card variant="glass" style={styles.featureCard}>
+                  <View style={[styles.featureIconBg, { backgroundColor: feature.color + '15' }]}>
+                    <Ionicons name={feature.icon} size={28} color={feature.color} />
+                  </View>
+                  <Text style={styles.featureTitle}>{feature.title}</Text>
+                  <Text style={styles.featureDesc}>{feature.desc}</Text>
+                </Card>
+              </TouchableOpacity>
             ))}
           </View>
 
@@ -401,7 +460,15 @@ export default function HomePage() {
           </Text>
 
           {TOOLS_CATEGORIES.map((cat, idx) => (
-            <View key={idx} style={[styles.catalogCategory, isMobile && styles.catalogCategoryMobile]}>
+            <View 
+              key={idx} 
+              onLayout={(e) => { 
+                // Capture accurate Y by adding common header/hero estimates if layout is relative
+                // Or better, we define the catalog section ref and add to that.
+                sectionPositions.current[cat.category] = e.nativeEvent.layout.y + 1100; 
+              }}
+              style={[styles.catalogCategory, isMobile && styles.catalogCategoryMobile]}
+            >
               <View style={styles.categoryLabelContainer}>
                 <Text style={styles.categoryLabel}>{cat.category}</Text>
                 <View style={styles.categoryLine} />
@@ -1005,5 +1072,24 @@ const styles = StyleSheet.create({
   catalogItemDesc: {
     color: Colors.textMuted,
     fontSize: FontSizes.xs,
+  },
+  backToTop: {
+    position: 'absolute',
+    bottom: 30,
+    right: 30,
+    zIndex: 2000,
+  },
+  backToTopInner: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: Colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Shadows.glow,
+  },
+  featureCardWrap: {
+    width: 320,
+    minHeight: 180,
   },
 });

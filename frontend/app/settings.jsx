@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  View, Text, StyleSheet, ScrollView, Animated, useWindowDimensions, Image
+  View, Text, StyleSheet, ScrollView, Animated, useWindowDimensions, Image, Platform, Alert
 } from 'react-native';
 import { useRouter, useRootNavigationState } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,7 +14,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Colors, Spacing, FontSizes, BorderRadius } from '../constants/theme';
 
 export default function SettingsPage() {
-  const { user, isAuthenticated, logout, isLoading: isAuthLoading, updateProfile } = useAuth();
+  const { user, isAuthenticated, logout, isLoading: isAuthLoading, updateProfile, deleteAccount } = useAuth();
   const router = useRouter();
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
@@ -54,6 +54,34 @@ export default function SettingsPage() {
   const handleLogout = async () => {
     await logout();
     router.replace('/');
+  };
+
+  const handleDeleteAccount = () => {
+    if (Platform.OS === 'web') {
+      if (window.confirm("Are you entirely sure you want to permanently delete your account and all associated URLs? This action cannot be undone.")) {
+        performDeletion();
+      }
+    } else {
+      Alert.alert(
+        "Delete Account",
+        "Are you entirely sure you want to permanently delete your account and all associated URLs? This action cannot be undone.",
+        [
+          { text: "Cancel", style: "cancel" },
+          { text: "Delete Permanently", style: "destructive", onPress: performDeletion }
+        ]
+      );
+    }
+  };
+
+  const performDeletion = async () => {
+    const result = await deleteAccount();
+    if (result.success) {
+      if (Platform.OS === 'web') alert(result.message);
+      router.replace('/login');
+    } else {
+      if (Platform.OS === 'web') alert(result.message);
+      else Alert.alert("Error", result.message);
+    }
   };
 
   if (!isAuthenticated) return null;
@@ -179,7 +207,7 @@ export default function SettingsPage() {
             />
             <Button
               title="Delete Account"
-              onPress={() => {}}
+              onPress={handleDeleteAccount}
               variant="outline"
               fullWidth
               icon={<Ionicons name="trash-outline" size={18} color={Colors.error} />}

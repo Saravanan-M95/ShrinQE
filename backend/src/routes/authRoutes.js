@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 import passport from 'passport';
-import { signup, login, getMe, oauthCallback, updateProfile, forgotPassword, verifyOtp, resetPassword } from '../controllers/authController.js';
+import { signup, login, getMe, oauthCallback, updateProfile, forgotPassword, verifyOtp, resetPassword, deleteAccount } from '../controllers/authController.js';
 import { authenticate } from '../middleware/auth.js';
 import { authLimiter } from '../middleware/rateLimiter.js';
 
@@ -41,6 +41,7 @@ router.post(
 // Profile
 router.get('/me', authenticate, getMe);
 router.patch('/me', authenticate, updateProfile);
+router.delete('/me', authenticate, deleteAccount);
 
 // Password Reset
 router.post(
