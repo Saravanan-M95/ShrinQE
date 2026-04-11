@@ -12,6 +12,7 @@ import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import { useAuth } from '../contexts/AuthContext';
 import { Colors, Spacing, FontSizes, BorderRadius } from '../constants/theme';
+import AlertToast from '../components/tools/AlertToast';
 
 export default function SettingsPage() {
   const { user, isAuthenticated, logout, isLoading: isAuthLoading, updateProfile, deleteAccount } = useAuth();
@@ -23,6 +24,10 @@ export default function SettingsPage() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateMessage, setUpdateMessage] = useState('');
   const [imageError, setImageError] = useState(false);
+  
+  // Modal states
+  const [modal, setModal] = useState({ visible: false, message: '', type: 'error', onConfirm: null });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -40,12 +45,24 @@ export default function SettingsPage() {
     try {
       const result = await updateProfile({ name: name.trim() });
       if (result.success) {
-        setUpdateMessage('Profile updated successfully');
+        setModal({
+          visible: true,
+          message: 'Profile updated successfully',
+          type: 'success'
+        });
       } else {
-        setUpdateMessage(result.message || 'Failed to update profile');
+        setModal({
+          visible: true,
+          message: result.message || 'Failed to update profile',
+          type: 'error'
+        });
       }
     } catch (err) {
-      setUpdateMessage('Failed to update profile');
+      setModal({
+        visible: true,
+        message: 'Failed to update profile',
+        type: 'error'
+      });
     } finally {
       setIsUpdating(false);
     }
@@ -57,30 +74,38 @@ export default function SettingsPage() {
   };
 
   const handleDeleteAccount = () => {
-    if (Platform.OS === 'web') {
-      if (window.confirm("Are you entirely sure you want to permanently delete your account and all associated URLs? This action cannot be undone.")) {
-        performDeletion();
-      }
-    } else {
-      Alert.alert(
-        "Delete Account",
-        "Are you entirely sure you want to permanently delete your account and all associated URLs? This action cannot be undone.",
-        [
-          { text: "Cancel", style: "cancel" },
-          { text: "Delete Permanently", style: "destructive", onPress: performDeletion }
-        ]
-      );
-    }
+    setModal({
+      visible: true,
+      title: 'Delete Account',
+      message: 'Are you entirely sure you want to permanently delete your account and all associated URLs? This action cannot be undone.',
+      type: 'confirm',
+      confirmText: 'Delete Permanently',
+      onConfirm: performDeletion,
+      onCancel: () => setModal({ visible: false })
+    });
   };
 
   const performDeletion = async () => {
+    setModal({ visible: false });
+    setIsDeleting(true);
+    
     const result = await deleteAccount();
+    setIsDeleting(false);
+
     if (result.success) {
-      if (Platform.OS === 'web') alert(result.message);
-      router.replace('/login');
+      setModal({
+        visible: true,
+        title: 'Account Deleted',
+        message: 'Your account has been permanently removed.',
+        type: 'success',
+        onDismiss: () => router.replace('/login')
+      });
     } else {
-      if (Platform.OS === 'web') alert(result.message);
-      else Alert.alert("Error", result.message);
+      setModal({
+        visible: true,
+        message: result.message || 'Failed to delete account',
+        type: 'error'
+      });
     }
   };
 
@@ -218,6 +243,16 @@ export default function SettingsPage() {
         </Animated.View>
         <Footer />
       </ScrollView>
+
+      <AlertToast 
+        visible={modal.visible}
+        title={modal.title}
+        message={modal.message}
+        type={modal.type}
+        confirmText={modal.confirmText}
+        onDismiss={modal.onConfirm || (() => setModal({ ...modal, visible: false }))}
+        onCancel={modal.onCancel}
+      />
     </View>
   );
 }

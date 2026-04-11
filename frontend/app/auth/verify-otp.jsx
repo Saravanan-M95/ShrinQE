@@ -7,16 +7,18 @@ import { Colors, Spacing, FontSizes, BorderRadius } from '../../constants/theme'
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
+import AlertToast from '../../components/tools/AlertToast';
 
 export default function VerifyOtpPage() {
   const router = useRouter();
   const { email } = useLocalSearchParams();
   const [otp, setOtp] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [modal, setModal] = useState({ visible: false, message: '', type: 'error' });
 
   const handleVerify = async () => {
     if (otp.length !== 6) {
-      Alert.alert('Error', 'Please enter the 6-digit code.');
+      setModal({ visible: true, message: 'Please enter the 6-digit code.', type: 'error' });
       return;
     }
 
@@ -32,7 +34,7 @@ export default function VerifyOtpPage() {
     } catch (err) {
       console.log('Verify OTP error:', err);
       const message = err?.message || 'Invalid or expired code.';
-      Alert.alert('Error', message);
+      setModal({ visible: true, message, type: 'error' });
     } finally {
       setIsLoading(false);
     }
@@ -81,6 +83,13 @@ export default function VerifyOtpPage() {
           <Text style={styles.resendText}>Didn't receive a code? <Text style={styles.resendHighlight}>Re-send</Text></Text>
         </TouchableOpacity>
       </Card>
+
+      <AlertToast 
+        visible={modal.visible}
+        message={modal.message}
+        type={modal.type}
+        onDismiss={() => setModal({ ...modal, visible: false })}
+      />
     </ScrollView>
   );
 }

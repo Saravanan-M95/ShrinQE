@@ -7,15 +7,17 @@ import { Colors, Spacing, FontSizes, BorderRadius } from '../../constants/theme'
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
+import AlertToast from '../../components/tools/AlertToast';
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [modal, setModal] = useState({ visible: false, message: '', type: 'error', onConfirm: null });
 
   const handleRequestOtp = async () => {
     if (!email) {
-      Alert.alert('Error', 'Please enter your email address.');
+      setModal({ visible: true, message: 'Please enter your email address.', type: 'error' });
       return;
     }
 
@@ -23,10 +25,17 @@ export default function ForgotPasswordPage() {
     try {
       const res = await authAPI.forgotPassword(email.trim());
       if (res.success) {
-        Alert.alert('Success', res.message);
-        router.push({
-          pathname: '/auth/verify-otp',
-          params: { email: email.trim() },
+        setModal({ 
+          visible: true, 
+          message: res.message, 
+          type: 'success', 
+          onConfirm: () => {
+            setModal({ visible: false });
+            router.push({
+              pathname: '/auth/verify-otp',
+              params: { email: email.trim() },
+            });
+          }
         });
       }
     } catch (err) {
@@ -35,16 +44,20 @@ export default function ForgotPasswordPage() {
       const message = err?.message || 'Failed to request reset code.';
 
       if (status === 404) {
-        Alert.alert(
-          'Account Not Found',
-          message,
-          [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Sign Up', onPress: () => router.push('/signup') },
-          ]
-        );
+        setModal({
+          visible: true,
+          title: 'Account Not Found',
+          message: message,
+          type: 'confirm',
+          confirmText: 'Sign Up',
+          onConfirm: () => {
+            setModal({ visible: false });
+            router.push('/signup');
+          },
+          onCancel: () => setModal({ visible: false })
+        });
       } else {
-        Alert.alert('Error', message);
+        setModal({ visible: true, message, type: 'error' });
       }
     } finally {
       setIsLoading(false);
@@ -87,6 +100,16 @@ export default function ForgotPasswordPage() {
           style={styles.submitBtn}
         />
       </Card>
+
+      <AlertToast 
+        visible={modal.visible}
+        title={modal.title}
+        message={modal.message}
+        type={modal.type}
+        confirmText={modal.confirmText}
+        onDismiss={modal.onConfirm || (() => setModal({ ...modal, visible: false }))}
+        onCancel={modal.onCancel}
+      />
     </ScrollView>
   );
 }

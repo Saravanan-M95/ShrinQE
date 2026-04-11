@@ -7,6 +7,7 @@ import { Colors, Spacing, FontSizes, BorderRadius } from '../../constants/theme'
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
+import AlertToast from '../../components/tools/AlertToast';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -14,16 +15,17 @@ export default function ResetPasswordPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [modal, setModal] = useState({ visible: false, message: '', type: 'error' });
   const [isSuccess, setIsSuccess] = useState(false);
 
   const handleReset = async () => {
     if (!password || password.length < 8) {
-      Alert.alert('Error', 'Password must be at least 8 characters long.');
+      setModal({ visible: true, message: 'Password must be at least 8 characters long.', type: 'error' });
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match.');
+      setModal({ visible: true, message: 'Passwords do not match.', type: 'error' });
       return;
     }
 
@@ -36,7 +38,7 @@ export default function ResetPasswordPage() {
     } catch (err) {
       console.log('Reset password error:', err);
       const message = err?.message || 'Failed to reset password. Please try again.';
-      Alert.alert('Error', message);
+      setModal({ visible: true, message, type: 'error' });
     } finally {
       setIsLoading(false);
     }
@@ -104,6 +106,13 @@ export default function ResetPasswordPage() {
           style={styles.submitBtn}
         />
       </Card>
+
+      <AlertToast 
+        visible={modal.visible}
+        message={modal.message}
+        type={modal.type}
+        onDismiss={() => setModal({ ...modal, visible: false })}
+      />
     </ScrollView>
   );
 }
