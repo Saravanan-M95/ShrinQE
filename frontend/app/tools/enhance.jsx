@@ -71,6 +71,7 @@ export default function EnhanceTool() {
       description="Transform blurry, dark, or noisy photos into crystal-clear images. Powered by advanced image processing algorithms running on our servers."
       icon="sparkles-outline"
       iconColor="#8B5CF6"
+      badge="🚧 Beta Version"
     >
       <AlertToast visible={!!error} message={error} type="error" onDismiss={() => setError('')} />
       <ImageDropZone onImageSelect={handleImageSelect} />
@@ -80,9 +81,9 @@ export default function EnhanceTool() {
           <Text style={styles.controlsTitle}>Enhancement Mode</Text>
 
           <View style={styles.aiBadge}>
-            <Ionicons name="server-outline" size={14} color={Colors.primary} />
+            <Ionicons name="construct-outline" size={14} color={Colors.primary} />
             <Text style={styles.aiBadgeText}>
-              Processed on ShrinQE servers using advanced Sharp algorithms — 100% free, no API costs.
+              Beta Version: Currently using standard server-side image processing. True Gen-AI facial restoration is coming in a future update!
             </Text>
           </View>
 

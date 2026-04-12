@@ -29,13 +29,14 @@ const PRESETS = {
     },
   },
 
-  // Denoise: For grainy/noisy low-light photos
+  // Denoise: For grainy/noisy low-light photos and compression artifacts
   denoise: {
     name: 'Denoise',
     apply: async (pipeline) => {
       return pipeline
-        .median(3)                          // Median filter removes salt-and-pepper noise
-        .sharpen({ sigma: 0.8, m1: 0.5, m2: 0.3 }) // Light resharpening after denoise
+        .median(5)                          // Stronger median to remove heavy grain/artifacts
+        .blur(0.4)                          // Gentle smoothing to blend the noise
+        .sharpen({ sigma: 1.5, m1: 1.2, m2: 0.6 }) // Stronger resharpening to recover edges
         .modulate({ brightness: 1.03 });
     },
   },
@@ -58,7 +59,8 @@ const PRESETS = {
     apply: async (pipeline) => {
       return pipeline
         .normalize()
-        .sharpen({ sigma: 1.0, m1: 0.8, m2: 0.4 }) // Gentle sharpening
+        .median(3)                          // Smooth out skin texture and minor grain
+        .sharpen({ sigma: 1.2, m1: 1.0, m2: 0.5 }) // Sharpen facial features (eyes, etc.)
         .modulate({ brightness: 1.06, saturation: 1.1 }) // Warm skin tones
         .gamma(1.15);                       // Lift facial shadows
     },

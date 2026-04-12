@@ -263,40 +263,49 @@ export default function HomePage() {
                   )}
                 </View>
 
-                {/* Primary Tools Grid */}
-                <View style={[styles.primaryToolsGrid, isMobile && styles.primaryToolsGridMobile]}>
-                  <TouchableOpacity 
-                    onPress={() => router.push('/tools/remove-background')}
-                    style={[styles.primaryToolCard, isMobile && styles.primaryToolCardMobile]}
-                  >
-                    <Card variant="glass" style={styles.primaryToolInner}>
-                      <View style={styles.badgePro}>
-                        <Text style={styles.badgeProText}>High Fidelity</Text>
-                      </View>
-                      <View style={[styles.primaryToolIcon, { backgroundColor: '#8B5CF6' + '20' }]}>
-                        <Ionicons name="cut" size={32} color="#8B5CF6" />
-                      </View>
-                      <View>
-                        <Text style={styles.primaryToolTitle}>Remove Background</Text>
-                        <Text style={styles.primaryToolDesc}>AI-powered subject isolation</Text>
-                      </View>
-                    </Card>
+                {/* Featured Bento Grid */}
+                <View style={[styles.bentoContainer, isMobile && styles.bentoContainerMobile]}>
+                  {/* Big Hero Tool */}
+                  <TouchableOpacity onPress={() => router.push('/tools/remove-background')} style={[styles.bentoMain, isMobile && styles.bentoMainMobile, { borderColor: '#8B5CF6' + '40' }]}>
+                    <LinearGradient colors={[Colors.bgCard, Colors.bgSecondary]} style={styles.bentoGradientBg} />
+                    <View style={[styles.bentoMainGlow, { backgroundColor: '#8B5CF6' + '20' }]} />
+                    <View style={[styles.badgePro, { backgroundColor: '#8B5CF6' }]}><Text style={styles.badgeProText}>✨ Pro</Text></View>
+                    <View style={styles.bentoMainIconLayer}>
+                      <Ionicons name="cut" size={56} color="#8B5CF6" />
+                    </View>
+                    <Text style={styles.bentoMainTitle}>Background Removal</Text>
+                    <Text style={styles.bentoMainDesc}>High-fidelity AI subject isolation. Remove backgrounds from any image instantly in your browser.</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity 
-                    onPress={() => router.push('/tools/compress')}
-                    style={[styles.primaryToolCard, isMobile && styles.primaryToolCardMobile]}
-                  >
-                    <Card variant="glass" style={styles.primaryToolInner}>
-                      <View style={[styles.primaryToolIcon, { backgroundColor: '#EC4899' + '20' }]}>
-                        <Ionicons name="contract" size={32} color="#EC4899" />
-                      </View>
+                  {/* Side Small Tools */}
+                  <View style={[styles.bentoSideGrid, isMobile && styles.bentoSideGridMobile]}>
+                    <TouchableOpacity onPress={() => router.push('/tools/compress')} style={styles.bentoSm}>
+                      <LinearGradient colors={[Colors.bgCard, Colors.bgSecondary]} style={styles.bentoGradientBg} />
+                      <Ionicons name="contract" size={28} color="#EC4899" style={styles.bentoSmIcon} />
                       <View>
-                        <Text style={styles.primaryToolTitle}>Compress Image</Text>
-                        <Text style={styles.primaryToolDesc}>Keep quality, reduce size</Text>
+                        <Text style={styles.bentoSmTitle}>Compress Image</Text>
+                        <Text style={styles.bentoSmDesc} numberOfLines={1}>Keep quality, reduce size</Text>
                       </View>
-                    </Card>
-                  </TouchableOpacity>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => router.push('/tools/meme-generator')} style={styles.bentoSm}>
+                       <LinearGradient colors={[Colors.bgCard, Colors.bgSecondary]} style={styles.bentoGradientBg} />
+                       <Ionicons name="happy" size={28} color="#F59E0B" style={styles.bentoSmIcon} />
+                       <View>
+                         <Text style={styles.bentoSmTitle}>Meme Generator</Text>
+                         <Text style={styles.bentoSmDesc} numberOfLines={1}>Viral meme formats</Text>
+                       </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => router.push('/tools/html-to-image')} style={styles.bentoSm}>
+                       <LinearGradient colors={[Colors.bgCard, Colors.bgSecondary]} style={styles.bentoGradientBg} />
+                       <Ionicons name="code-slash" size={28} color="#14B8A6" style={styles.bentoSmIcon} />
+                       <View>
+                         <Text style={styles.bentoSmTitle}>HTML to Image</Text>
+                         <Text style={styles.bentoSmDesc} numberOfLines={1}>Beautiful code snippets</Text>
+                       </View>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             )}
@@ -766,55 +775,105 @@ const styles = StyleSheet.create({
   mainActionContainerMobile: {
     gap: Spacing.lg,
   },
-  primaryToolsGrid: {
+  // Bento Grid Redesign
+  bentoContainer: {
     flexDirection: 'row',
     width: '100%',
     gap: Spacing.lg,
     justifyContent: 'center',
+    height: 300,
   },
-  primaryToolsGridMobile: {
+  bentoContainerMobile: {
+    flexDirection: 'column',
+    height: 'auto',
+  },
+  bentoMain: {
+    flex: 1.2,
+    borderRadius: BorderRadius.lg,
+    borderWidth: 1,
+    borderColor: '#8B5CF6' + '40',
+    padding: Spacing.xxl,
+    justifyContent: 'flex-end',
+    position: 'relative',
+    overflow: 'hidden',
+    ...Shadows.glow,
+  },
+  bentoMainMobile: {
+    minHeight: 240,
+  },
+  bentoGradientBg: {
+    ...StyleSheet.absoluteFillObject,
+    opacity: 0.8,
+  },
+  bentoMainGlow: {
+    position: 'absolute',
+    top: -50,
+    right: -50,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: '#8B5CF6' + '20',
+    // Polyfill for blur on web vs native
+    ...(Platform.OS === 'web' ? { filter: 'blur(40px)' } : {}),
+  },
+  bentoMainIconLayer: {
+    marginBottom: Spacing.md,
+  },
+  bentoMainTitle: {
+    color: '#fff',
+    fontSize: FontSizes.xxl,
+    fontWeight: '800',
+    marginBottom: Spacing.xs,
+  },
+  bentoMainDesc: {
+    color: Colors.textSecondary,
+    fontSize: FontSizes.sm,
+    maxWidth: '90%',
+  },
+  bentoSideGrid: {
+    flex: 1,
+    flexDirection: 'column',
+    gap: Spacing.md,
+  },
+  bentoSideGridMobile: {
     flexDirection: 'column',
   },
-  primaryToolCard: {
+  bentoSm: {
     flex: 1,
-  },
-  primaryToolCardMobile: {
-    width: '100%',
-  },
-  primaryToolInner: {
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: Colors.borderLight,
+    padding: Spacing.md,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.lg,
-    padding: Spacing.lg,
-    minHeight: 110,
+    gap: Spacing.md,
     position: 'relative',
     overflow: 'hidden',
   },
-  primaryToolIcon: {
-    width: 60,
-    height: 60,
-    borderRadius: BorderRadius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
+  bentoSmIcon: {
+    padding: 8,
+    borderRadius: BorderRadius.sm,
+    backgroundColor: 'rgba(255,255,255,0.05)',
   },
-  primaryToolTitle: {
+  bentoSmTitle: {
     color: Colors.textPrimary,
-    fontSize: FontSizes.lg,
-    fontWeight: '800',
+    fontSize: FontSizes.md,
+    fontWeight: '700',
     marginBottom: 2,
   },
-  primaryToolDesc: {
-    color: Colors.textSecondary,
-    fontSize: FontSizes.sm,
+  bentoSmDesc: {
+    color: Colors.textMuted,
+    fontSize: FontSizes.xs,
   },
   badgePro: {
     position: 'absolute',
-    top: 10,
-    right: 10,
-    backgroundColor: Colors.primary,
-    paddingVertical: 2,
-    paddingHorizontal: 8,
+    top: 12,
+    right: 12,
+    backgroundColor: '#8B5CF6',
+    paddingVertical: 4,
+    paddingHorizontal: 10,
     borderRadius: BorderRadius.full,
+    zIndex: 10,
   },
   badgeProText: {
     color: '#fff',
