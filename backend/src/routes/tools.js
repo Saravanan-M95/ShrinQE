@@ -1,9 +1,10 @@
 import express from 'express';
 import multer from 'multer';
 import { removeBackgroundPro } from '../utils/pro-ai-processor.js';
+import { enhanceImage, AVAILABLE_PRESETS } from '../utils/enhance-processor.js';
 
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } }); // 20MB
 
 // POST /api/tools/remove-background
 router.post('/remove-background', upload.single('image'), async (req, res) => {
@@ -33,4 +34,30 @@ router.post('/remove-background', upload.single('image'), async (req, res) => {
     }
 });
 
+// GET /api/tools/enhance/presets — List available enhancement presets
+router.get('/enhance/presets', (req, res) => {
+    res.json({ presets: AVAILABLE_PRESETS });
+});
+
+// POST /api/tools/enhance — Enhance a photo using Sharp
+router.post('/enhance', upload.single('image'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No image file provided' });
+        }
+
+        const preset = req.body.preset || 'auto';
+        console.log(`[ENHANCE] Received file: ${req.file.originalname}, Size: ${req.file.size}, Preset: ${preset}`);
+
+        const outputBuffer = await enhanceImage(req.file.buffer, preset);
+
+        res.set('Content-Type', 'image/jpeg');
+        res.send(outputBuffer);
+    } catch (e) {
+        console.error("Enhancement Error:", e);
+        res.status(500).json({ error: 'Photo enhancement failed: ' + e.message });
+    }
+});
+
 export default router;
+

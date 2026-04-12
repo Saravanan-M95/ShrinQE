@@ -58,7 +58,7 @@ export default function ToolsHub() {
           >
             <View style={styles.badge}>
               <Ionicons name="images-outline" size={14} color={Colors.primary} />
-              <Text style={styles.badgeText}>13 Free Image Tools</Text>
+              <Text style={styles.badgeText}>14 Free Image Tools</Text>
             </View>
 
             <Text style={[styles.heroTitle, isMobile && styles.heroTitleMobile]}>

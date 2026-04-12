@@ -597,6 +597,39 @@ export const htmlToImage = async (htmlString, options = {}) => {
   };
 };
 
+// ─── Photo Enhance (Server-Side Sharp) ───────────────────────
+
+export const enhancePhoto = async (file, preset = 'auto') => {
+  try {
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('preset', preset);
+
+    const response = await fetch(`${API_URL}/api/tools/enhance`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `Server error: ${response.status}`);
+    }
+
+    const blob = await response.blob();
+    const img = await loadImage(blob);
+
+    return {
+      blob,
+      width: img.naturalWidth,
+      height: img.naturalHeight,
+      url: URL.createObjectURL(blob),
+    };
+  } catch (err) {
+    console.error('Photo Enhancement Error:', err);
+    throw new Error('Enhancement failed: ' + err.message);
+  }
+};
+
 /**
  * Revoke a previously created object URL to free memory
  */

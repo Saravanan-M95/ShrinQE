@@ -19,6 +19,7 @@ export const TOOLS_CATEGORIES = [
   {
     category: 'Enhance',
     items: [
+      { id: 'enhance', title: 'AI Enhance', desc: 'Fix blurry, dark & noisy photos', icon: 'sparkles-outline', color: '#8B5CF6', route: '/tools/enhance' },
       { id: 'upscale', title: 'Upscale', desc: 'Enlarge by 2×, 3×, or 4×', icon: 'expand-outline', color: '#3B82F6', route: '/tools/upscale' },
       { id: 'watermark', title: 'Watermark', desc: 'Add custom text watermarks', icon: 'water-outline', color: '#6366F1', route: '/tools/watermark' },
       { id: 'photo-editor', title: 'Editor', desc: 'Brightness, contrast, filters & more', icon: 'color-wand-outline', color: '#EC4899', route: '/tools/photo-editor' },
