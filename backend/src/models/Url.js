@@ -5,7 +5,6 @@ const Url = sequelize.define('Url', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    autoIncrementIdentity: true,
     primaryKey: true,
   },
   userId: {
