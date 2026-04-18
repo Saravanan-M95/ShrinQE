@@ -13,13 +13,19 @@ import DownloadButton from '../../components/tools/DownloadButton';
 import AlertToast from '../../components/tools/AlertToast';
 import Card from '../../components/ui/Card';
 import { Colors, Spacing, FontSizes, BorderRadius } from '../../constants/theme';
+import { useRouter } from 'expo-router';
+import { API_URL } from '../../constants/config';
 import { removeBackground } from '../../services/imageProcessor';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function RemoveBackgroundTool() {
   const [file, setFile] = useState(null);
   const [result, setResult] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const router = useRouter();
+  const { token, isAuthenticated } = useAuth();
 
   const handleImageSelect = useCallback((selectedFile) => {
     setFile(selectedFile);
@@ -29,13 +35,55 @@ export default function RemoveBackgroundTool() {
   const handleRemove = async () => {
     if (!file) return;
     setProcessing(true);
+    setError('');
     try {
       const processed = await removeBackground(file);
-      setResult(processed);
+      setResult(processed); // contains imageId and watermarked url
     } catch (err) {
-      setError('Background removal failed: ' + err.message);
+      if (err.message === 'AUTH_REQUIRED') {
+        setError('Please login to use this premium tool.');
+        setTimeout(() => router.push('/login'), 2000);
+      } else {
+        setError('Background removal failed: ' + err.message);
+      }
     } finally {
       setProcessing(false);
+    }
+  };
+
+  const handleCheckout = async () => {
+    try {
+      setCheckoutLoading(true);
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+      
+      const response = await fetch(`${API_URL}/api/payments/create-order`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          orderAmount: 10,
+          itemType: 'bg-removal',
+          itemId: result.imageId,
+          platform: 'mobile' // Force backend to return a hosted payment link
+        })
+      });
+
+      const data = await response.json();
+      if (data.success && data.paymentLink) {
+        // Redirect to Cashfree checkout
+        window.location.href = data.paymentLink;
+      } else {
+        setError(data.message || 'Payment intialization failed.');
+      }
+    } catch (err) {
+      setError('Checkout failed: ' + err.message);
+    } finally {
+      setCheckoutLoading(false);
     }
   };
 
@@ -57,28 +105,26 @@ export default function RemoveBackgroundTool() {
           <View style={styles.betaBadge}>
             <Ionicons name="sparkles" size={14} color={Colors.warning} />
             <Text style={styles.betaText}>
-              Powered by On-Device AI. The model will securely download (~50MB) on first use and execute entirely inside your browser. No images are uploaded to the cloud!
+              Powered by Pro AI. Background removal requires a premium processing fee of ₹10 after preview.
             </Text>
           </View>
 
           <View style={styles.actionRow}>
-            <button
-              onClick={handleRemove}
+            <TouchableOpacity
+              onPress={handleRemove}
               disabled={processing}
               style={{
-                background: processing ? Colors.bgTertiary : 'linear-gradient(135deg, #8B5CF6, #EC4899)',
-                color: '#fff',
-                border: 'none',
+                backgroundColor: processing ? Colors.bgTertiary : Colors.primary,
                 borderRadius: 12,
-                padding: '14px 32px',
-                fontSize: 15,
-                fontWeight: 700,
-                fontFamily: 'Inter, sans-serif',
-                cursor: processing ? 'not-allowed' : 'pointer',
+                paddingVertical: 14,
+                paddingHorizontal: 32,
+                opacity: processing ? 0.7 : 1,
               }}
             >
-              {processing ? '⏳ Removing...' : '✂️ Remove Background'}
-            </button>
+              <Text style={{ color: '#fff', fontSize: 15, fontWeight: '700', fontFamily: 'Inter' }}>
+                {processing ? '⏳ Removing...' : '✂️ Remove Background'}
+              </Text>
+            </TouchableOpacity>
           </View>
         </Card>
       )}
@@ -86,7 +132,7 @@ export default function RemoveBackgroundTool() {
       {result && (
         <View style={styles.resultSection}>
           <Card variant="glass" style={styles.resultCard}>
-            <Text style={styles.resultTitle}>✅ Background Removed</Text>
+            <Text style={styles.resultTitle}>✅ Preview Generated</Text>
             {/* Checkerboard pattern to show transparency */}
             <div
               style={{
@@ -104,12 +150,25 @@ export default function RemoveBackgroundTool() {
             </div>
           </Card>
           <View style={styles.downloadRow}>
-            <DownloadButton
-              blob={result.blob}
-              fileName="shrinqe-no-bg.png"
-              size={result.blob.size}
-              label="Download PNG"
-            />
+            <TouchableOpacity
+               onPress={handleCheckout}
+               disabled={checkoutLoading}
+               style={{
+                 backgroundColor: checkoutLoading ? Colors.bgTertiary : Colors.primary,
+                 borderRadius: 12,
+                 paddingVertical: 14,
+                 paddingHorizontal: 32,
+                 opacity: checkoutLoading ? 0.7 : 1,
+                 shadowColor: Colors.primary,
+                 shadowOffset: { width: 0, height: 4 },
+                 shadowOpacity: 0.3,
+                 shadowRadius: 12,
+               }}
+            >
+              <Text style={{ color: '#fff', fontSize: 16, fontWeight: '800', fontFamily: 'Inter' }}>
+                {checkoutLoading ? 'Redirecting...' : '💳 Pay ₹10 & Download (No Watermark)'}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       )}

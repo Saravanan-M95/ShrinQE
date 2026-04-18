@@ -12,9 +12,11 @@ import Button from '../components/ui/Button';
 import { useAuth } from '../contexts/AuthContext';
 import { GOOGLE_OAUTH_URL } from '../constants/config';
 import { Colors, Spacing, FontSizes, BorderRadius, Shadows } from '../constants/theme';
+import { usePageMeta } from '../hooks/useSEO';
 
 export default function SignupPage() {
   const { signup, isAuthenticated, error: authError, clearError } = useAuth();
+  usePageMeta('Sign Up Free | ShrinQE', 'Create a free ShrinQE account to start shortening URLs, tracking analytics, and using 13+ image tools.');
   const router = useRouter();
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
@@ -111,7 +113,7 @@ export default function SignupPage() {
                   <Ionicons name="person-add-outline" size={28} color="#fff" />
                 </LinearGradient>
                 <Text style={styles.title}>Create Account</Text>
-                <Text style={styles.subtitle}>Start shortening links and earning today</Text>
+                <Text style={styles.subtitle}>Start shortening links and managing images today</Text>
               </View>
 
               {authError && (

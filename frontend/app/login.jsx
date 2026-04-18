@@ -12,9 +12,11 @@ import Button from '../components/ui/Button';
 import { useAuth } from '../contexts/AuthContext';
 import { GOOGLE_OAUTH_URL } from '../constants/config';
 import { Colors, Spacing, FontSizes, BorderRadius, Shadows } from '../constants/theme';
+import { usePageMeta } from '../hooks/useSEO';
 
 export default function LoginPage() {
   const { login, isAuthenticated, error: authError, clearError } = useAuth();
+  usePageMeta('Log In | ShrinQE', 'Sign in to your ShrinQE account to manage shortened URLs, view analytics, and access image tools.');
   const router = useRouter();
   const params = useLocalSearchParams();
   const { width } = useWindowDimensions();

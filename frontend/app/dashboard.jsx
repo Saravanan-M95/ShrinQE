@@ -17,9 +17,13 @@ import QRCodeModal from '../components/ui/QRCodeModal';
 import { useAuth } from '../contexts/AuthContext';
 import { urlAPI } from '../services/api';
 import { Colors, Spacing, FontSizes, BorderRadius, Shadows } from '../constants/theme';
+import LoginRequiredPage from '../components/auth/LoginRequiredPage';
+import { usePageMeta } from '../hooks/useSEO';
 
 export default function DashboardPage() {
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
+
+  usePageMeta('Dashboard | ShrinQE', 'Manage your shortened URLs, view analytics, and track link performance on ShrinQE.');
   const router = useRouter();
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
@@ -141,7 +145,7 @@ export default function DashboardPage() {
     { label: 'Top Clicks', value: stats.topUrl?.clickCount || 0, icon: 'trending-up-outline', color: Colors.warning, bg: 'rgba(245,158,11,0.1)' },
   ];
 
-  if (!isAuthenticated) return null;
+  if (!isAuthenticated) return <LoginRequiredPage feature="your Dashboard" />;
 
   return (
     <View style={styles.wrapper}>

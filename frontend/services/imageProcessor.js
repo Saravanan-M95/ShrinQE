@@ -449,29 +449,45 @@ export const removeBackground = async (file) => {
     const formData = new FormData();
     formData.append('image', file);
 
+    let headers = {};
+    try {
+      const { Platform } = require('react-native');
+      let token = null;
+      if (Platform.OS === 'web') {
+        token = localStorage.getItem('shrinqe_token');
+      } else {
+        const SecureStore = require('expo-secure-store');
+        token = await SecureStore.getItemAsync('shrinqe_token');
+      }
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+    } catch (e) {
+      // Ignore if not found
+    }
+
     const response = await fetch(`${API_URL}/api/tools/remove-background`, {
       method: 'POST',
       body: formData,
-      // Note: No'Content-Type' header needed for FormData; browser sets it with boundary
+      headers: headers
     });
 
     if (!response.ok) {
+      if (response.status === 401 || response.status === 403) {
+        throw new Error('AUTH_REQUIRED');
+      }
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.error || `Backend error: ${response.status}`);
     }
 
-    const blob = await response.blob();
-    
-    // Load back into Image to get dimensions (since it's a new PNG)
-    const img = await loadImage(blob);
-    
+    const resultData = await response.json();
     return {
-      blob,
-      width: img.naturalWidth,
-      height: img.naturalHeight,
-      url: URL.createObjectURL(blob),
+      imageId: resultData.imageId,
+      url: resultData.previewBase64, // Watermarked preview
+      blob: null // Blob is null until payment is done
     };
   } catch (err) {
+    if (err.message === 'AUTH_REQUIRED') throw err;
     console.error('AI Background Removal Error:', err);
     throw new Error('AI processing failed: ' + err.message);
   }

@@ -11,6 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Header from '../layout/Header';
 import Footer from '../layout/Footer';
 import { Colors, Spacing, FontSizes, BorderRadius } from '../../constants/theme';
+import { usePageMeta, useAdSense } from '../../hooks/useSEO';
 
 export default function ToolPageLayout({
   title,
@@ -22,6 +23,13 @@ export default function ToolPageLayout({
 }) {
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
+
+  // SEO + AdSense for each tool page (all have substantial content)
+  usePageMeta(
+    `${title} — Free Online Tool | ShrinQE`,
+    description || `Use ShrinQE's free ${title} tool. Process images directly in your browser with no upload required.`
+  );
+  useAdSense();
 
   return (
     <View style={styles.wrapper}>

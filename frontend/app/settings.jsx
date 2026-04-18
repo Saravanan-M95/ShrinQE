@@ -13,9 +13,13 @@ import Button from '../components/ui/Button';
 import { useAuth } from '../contexts/AuthContext';
 import { Colors, Spacing, FontSizes, BorderRadius } from '../constants/theme';
 import AlertToast from '../components/tools/AlertToast';
+import LoginRequiredPage from '../components/auth/LoginRequiredPage';
+import { usePageMeta } from '../hooks/useSEO';
 
 export default function SettingsPage() {
   const { user, isAuthenticated, logout, isLoading: isAuthLoading, updateProfile, deleteAccount } = useAuth();
+
+  usePageMeta('Settings | ShrinQE', 'Manage your ShrinQE account settings, profile, and preferences.');
   const router = useRouter();
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
@@ -109,7 +113,7 @@ export default function SettingsPage() {
     }
   };
 
-  if (!isAuthenticated) return null;
+  if (!isAuthenticated) return <LoginRequiredPage feature="Settings" />;
 
   return (
     <View style={styles.wrapper}>

@@ -8,11 +8,15 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { redirectAPI } from '../services/api';
 import { Colors, Spacing, FontSizes, BorderRadius, Shadows } from '../constants/theme';
+import { usePageMeta } from '../hooks/useSEO';
 
 export default function InterstitialPage() {
   const { code } = useLocalSearchParams();
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
+
+  // SEO — do NOT load AdSense here (behavioral/redirect page)
+  usePageMeta('Redirecting... | ShrinQE', 'You are being redirected to your destination via ShrinQE short link.');
 
   const [redirectInfo, setRedirectInfo] = useState(null);
   const [countdown, setCountdown] = useState(5);
@@ -198,8 +202,8 @@ export default function InterstitialPage() {
                   <Text style={styles.infoTitle}>Why the Countdown?</Text>
                 </View>
                 <Text style={styles.infoText}>
-                  This brief 5-second pause allows our automated systems to verify the destination link's safety status and ensures that our service remains sustainable through verified ad delivery. 
-                  This support helps us keep ShrinQE free for everyone while providing powerful analytics tools.
+                  This brief 5-second pause allows our automated systems to verify the destination link's safety status before redirecting you. 
+                  It gives you a moment to review the destination URL and ensures you are being taken to a safe and legitimate website.
                 </Text>
               </View>
 

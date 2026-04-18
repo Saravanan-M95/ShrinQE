@@ -17,12 +17,19 @@ import Card from '../../components/ui/Card';
 import { Colors, Spacing, FontSizes, BorderRadius } from '../../constants/theme';
 
 import { TOOLS_CATEGORIES } from '../../constants/tools';
+import { usePageMeta, useAdSense } from '../../hooks/useSEO';
 
 
 export default function ToolsHub() {
   const router = useRouter();
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
+
+  usePageMeta(
+    'Free Image Tools — Compress, Resize, Convert & More | ShrinQE',
+    'Use 13+ free browser-based image tools: compress, resize, crop, rotate, convert formats, remove backgrounds, generate memes, and more. No upload required.'
+  );
+  useAdSense();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;

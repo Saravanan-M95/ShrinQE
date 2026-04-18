@@ -22,11 +22,19 @@ import { urlAPI } from '../services/api';
 import { Colors, Spacing, FontSizes, BorderRadius, Shadows } from '../constants/theme';
 import { TOOLS_CATEGORIES } from '../constants/tools';
 import AnimatedCounter from '../components/ui/AnimatedCounter';
+import { usePageMeta, useAdSense } from '../hooks/useSEO';
 
 
 export default function HomePage() {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
+
+  // SEO + AdSense (homepage has substantial content)
+  usePageMeta(
+    'ShrinQE — Free URL Shortener & Image Tools',
+    'ShrinQE is a free URL shortener with analytics, QR codes, and 13+ browser-based image tools including background removal, compression, resize, crop, and more.'
+  );
+  useAdSense();
 
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
@@ -174,10 +182,10 @@ export default function HomePage() {
   ];
 
   const stats = [
-    { value: '10M+', label: 'Links Shortened' },
-    { value: '5M+', label: 'Images Processed' },
-    { value: '150K+', label: 'Happy Users' },
-    { value: '99.9%', label: 'Uptime' },
+    { value: '13+', label: 'Image Tools' },
+    { value: '100%', label: 'Free to Use' },
+    { value: '100%', label: 'Browser-Based' },
+    { value: '0', label: 'Data Stored' },
   ];
 
 
@@ -548,7 +556,7 @@ export default function HomePage() {
             Master Your Digital Assets
           </Text>
           <Text style={styles.ctaSubtitle}>
-            Join 150K+ users who trust ShrinQE for link management and image processing.
+            Start using ShrinQE today for free link management and professional image processing.
           </Text>
           <Button
             title="Start Using ShrinQE — It's Free"

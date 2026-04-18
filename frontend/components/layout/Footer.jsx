@@ -36,9 +36,9 @@ export default function Footer() {
 
           <View style={styles.linksGroup}>
             <Text style={styles.linksTitle}>Company</Text>
-            <TouchableOpacity onPress={() => router.push('/')}><Text style={styles.linkText}>About</Text></TouchableOpacity>
-            <TouchableOpacity onPress={() => Linking.openURL('mailto:saraspace006@gmail.com')}><Text style={styles.linkText}>Support</Text></TouchableOpacity>
-            <TouchableOpacity onPress={() => Linking.openURL('mailto:saraspace006@gmail.com')}><Text style={styles.linkText}>Contact</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/about')}><Text style={styles.linkText}>About</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/contact')}><Text style={styles.linkText}>Support</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/contact')}><Text style={styles.linkText}>Contact</Text></TouchableOpacity>
           </View>
 
           <View style={styles.linksGroup}>

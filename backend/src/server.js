@@ -13,6 +13,7 @@ import urlRoutes from './routes/urlRoutes.js';
 import { redirectUrl } from './controllers/urlController.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import toolsRoutes from './routes/tools.js';
+import paymentRoutes from './routes/paymentRoutes.js';
 import { generalLimiter, redirectLimiter } from './middleware/rateLimiter.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -88,6 +89,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/urls', urlRoutes);
 app.use('/api/tools', toolsRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Short URL redirect (must be after API routes)
 app.get('/:code', redirectLimiter, redirectUrl);

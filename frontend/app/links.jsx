@@ -14,9 +14,13 @@ import QRCodeModal from '../components/ui/QRCodeModal';
 import { useAuth } from '../contexts/AuthContext';
 import { urlAPI } from '../services/api';
 import { Colors, Spacing, FontSizes, BorderRadius } from '../constants/theme';
+import LoginRequiredPage from '../components/auth/LoginRequiredPage';
+import { usePageMeta } from '../hooks/useSEO';
 
 export default function LinksPage() {
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+
+  usePageMeta('My Links | ShrinQE', 'View, manage, and analyze all your shortened URLs in one place.');
   const router = useRouter();
   const { width } = useWindowDimensions();
   const isMobile = width < 768;
@@ -119,7 +123,7 @@ export default function LinksPage() {
     }
   };
 
-  if (!isAuthenticated) return null;
+  if (!isAuthenticated) return <LoginRequiredPage feature="your Links" />;
 
   return (
     <View style={styles.wrapper}>
