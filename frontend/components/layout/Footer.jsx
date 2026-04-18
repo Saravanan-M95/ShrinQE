@@ -45,14 +45,21 @@ export default function Footer() {
             <Text style={styles.linksTitle}>Legal</Text>
             <TouchableOpacity onPress={() => router.push('/privacy')}><Text style={styles.linkText}>Privacy Policy</Text></TouchableOpacity>
             <TouchableOpacity onPress={() => router.push('/terms')}><Text style={styles.linkText}>Terms of Service</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/refund')}><Text style={styles.linkText}>Refund & Cancellation</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/shipping')}><Text style={styles.linkText}>Shipping Policy</Text></TouchableOpacity>
             <TouchableOpacity onPress={() => router.push('/privacy')}><Text style={styles.linkText}>Cookie Policy</Text></TouchableOpacity>
           </View>
         </View>
 
         <View style={styles.bottomBar}>
-          <Text style={styles.copyright}>
-            © {new Date().getFullYear()} ShrinQE. All rights reserved.
-          </Text>
+          <View style={styles.bottomBarLeft}>
+            <Text style={styles.copyright}>
+              © {new Date().getFullYear()} ShrinQE. All rights reserved.
+            </Text>
+            <Text style={styles.footerAddress}>
+              Registered Office: Coimbatore, Tamil Nadu, India
+            </Text>
+          </View>
           <View style={styles.socialIcons}>
             {/* Social icons hidden as per user request */}
           </View>
@@ -142,8 +149,18 @@ const styles = StyleSheet.create({
     gap: Spacing.md,
   },
   copyright: {
-    color: Colors.textMuted,
+    color: Colors.textPrimary,
     fontSize: FontSizes.xs,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  footerAddress: {
+    color: Colors.textMuted,
+    fontSize: 10,
+    fontWeight: '400',
+  },
+  bottomBarLeft: {
+    flex: 1,
   },
   socialIcons: {
     flexDirection: 'row',

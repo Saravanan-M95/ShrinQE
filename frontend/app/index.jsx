@@ -513,6 +513,93 @@ export default function HomePage() {
           ))}
         </View>
 
+        {/* Pricing & Services Section */}
+        <View style={styles.pricingSection}>
+          <Text style={[styles.sectionTitle, isMobile && styles.sectionTitleMobile]}>
+            Simple, Transparent <Text style={styles.sectionTitleAccent}>Pricing</Text>
+          </Text>
+          <Text style={styles.sectionSubtitle}>
+            Professional tools with clear upfront costs. No hidden fees.
+          </Text>
+
+          <View style={[styles.pricingGrid, isMobile && styles.pricingGridMobile]}>
+            {/* Free Plan */}
+            <Card variant="glass" style={[styles.pricingCard, isMobile && styles.pricingCardMobile]}>
+              <View style={styles.pricingHeader}>
+                <Text style={styles.planName}>Basic Suite</Text>
+                <View style={styles.priceRow}>
+                  <Text style={styles.currency}>₹</Text>
+                  <Text style={styles.price}>0</Text>
+                  <Text style={styles.period}>/forever</Text>
+                </View>
+              </View>
+              <View style={styles.planFeatures}>
+                <View style={styles.featureItem}>
+                  <Ionicons name="checkmark-circle" size={16} color={Colors.success} />
+                  <Text style={styles.featureText}>Unlimited URL Shortening</Text>
+                </View>
+                <View style={styles.featureItem}>
+                  <Ionicons name="checkmark-circle" size={16} color={Colors.success} />
+                  <Text style={styles.featureText}>Basic Link Analytics</Text>
+                </View>
+                <View style={styles.featureItem}>
+                  <Ionicons name="checkmark-circle" size={16} color={Colors.success} />
+                  <Text style={styles.featureText}>10+ Browser Image Tools</Text>
+                </View>
+                <View style={styles.featureItem}>
+                  <Ionicons name="checkmark-circle" size={16} color={Colors.success} />
+                  <Text style={styles.featureText}>Standard QR Codes</Text>
+                </View>
+              </View>
+              <Button 
+                title="Started for Free" 
+                onPress={() => router.push('/signup')} 
+                variant="outline" 
+                size="sm" 
+              />
+            </Card>
+
+            {/* Pro AI Service */}
+            <Card variant="glass" style={[styles.pricingCard, styles.pricingCardFeatured, isMobile && styles.pricingCardMobile]}>
+              <LinearGradient colors={['rgba(124, 58, 237, 0.15)', 'transparent']} style={styles.featuredGlow} />
+              <View style={styles.pricingHeader}>
+                <View style={styles.planBadge}>
+                  <Text style={styles.planBadgeText}>POPULAR</Text>
+                </View>
+                <Text style={styles.planName}>Pro AI Tools</Text>
+                <View style={styles.priceRow}>
+                  <Text style={styles.currency}>₹</Text>
+                  <Text style={styles.price}>10</Text>
+                  <Text style={styles.period}>/per image</Text>
+                </View>
+              </View>
+              <View style={styles.planFeatures}>
+                <View style={styles.featureItem}>
+                  <Ionicons name="sparkles" size={16} color={Colors.primaryLight} />
+                  <Text style={[styles.featureText, { fontWeight: '700' }]}>AI Background Removal</Text>
+                </View>
+                <View style={styles.featureItem}>
+                  <Ionicons name="checkmark-circle" size={16} color={Colors.success} />
+                  <Text style={styles.featureText}>High-Fidelity Isolation</Text>
+                </View>
+                <View style={styles.featureItem}>
+                  <Ionicons name="checkmark-circle" size={16} color={Colors.success} />
+                  <Text style={styles.featureText}>Advanced AI Upscaling</Text>
+                </View>
+                <View style={styles.featureItem}>
+                  <Ionicons name="checkmark-circle" size={16} color={Colors.success} />
+                  <Text style={styles.featureText}>Priority Support</Text>
+                </View>
+              </View>
+              <Button 
+                title="Use AI Tools" 
+                onPress={() => router.push('/tools/remove-background')} 
+                size="sm" 
+              />
+            </Card>
+          </View>
+        </View>
+
 
         {/* FAQ Section */}
         <View style={styles.faqSection}>
@@ -1158,5 +1245,106 @@ const styles = StyleSheet.create({
   featureCardWrap: {
     width: 320,
     minHeight: 180,
+  },
+
+  // Pricing Section
+  pricingSection: {
+    paddingVertical: Spacing.xxxl,
+    paddingHorizontal: Spacing.lg,
+    alignItems: 'center',
+  },
+  pricingGrid: {
+    flexDirection: 'row',
+    gap: Spacing.xl,
+    maxWidth: 1000,
+    width: '100%',
+    justifyContent: 'center',
+    marginTop: Spacing.lg,
+  },
+  pricingGridMobile: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: Spacing.lg,
+  },
+  pricingCard: {
+    width: 350,
+    padding: Spacing.xl,
+    minHeight: 450,
+    justifyContent: 'space-between',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  pricingCardMobile: {
+    width: '100%',
+    minHeight: 'auto',
+  },
+  pricingCardFeatured: {
+    borderColor: Colors.primary + '60',
+    borderWidth: 2,
+  },
+  featuredGlow: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 150,
+    zIndex: -1,
+  },
+  pricingHeader: {
+    alignItems: 'center',
+    marginBottom: Spacing.xl,
+  },
+  planBadge: {
+    backgroundColor: Colors.primary,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: 4,
+    borderRadius: BorderRadius.full,
+    marginBottom: Spacing.md,
+  },
+  planBadgeText: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: '900',
+    letterSpacing: 1,
+  },
+  planName: {
+    fontSize: FontSizes.lg,
+    fontWeight: '700',
+    color: Colors.textSecondary,
+    marginBottom: Spacing.sm,
+  },
+  priceRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  currency: {
+    fontSize: FontSizes.xl,
+    fontWeight: '700',
+    color: Colors.textPrimary,
+    marginRight: 2,
+  },
+  price: {
+    fontSize: 48,
+    fontWeight: '900',
+    color: Colors.textPrimary,
+    letterSpacing: -1,
+  },
+  period: {
+    fontSize: FontSizes.sm,
+    color: Colors.textMuted,
+    marginLeft: 4,
+  },
+  planFeatures: {
+    gap: Spacing.md,
+    marginBottom: Spacing.xl,
+  },
+  featureItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.sm,
+  },
+  featureText: {
+    fontSize: FontSizes.md,
+    color: Colors.textSecondary,
   },
 });

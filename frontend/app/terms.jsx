@@ -24,7 +24,7 @@ export default function TermsOfService() {
           <Card variant="glass" style={styles.card}>
             <Text style={styles.sectionTitle}>1. Acceptance of Terms</Text>
             <Text style={styles.text}>
-              By accessing or using ShrinQE (the "Service"), available at shrinqe.com, you agree to be bound by these Terms of Service ("Terms"). If you do not agree to all of these Terms, you must immediately stop using the Service. These Terms constitute a legally binding agreement between you and ShrinQE.
+              By accessing or using ShrinQE (the "Service"), available at shrinqe.com, you agree to be bound by these Terms of Service ("Terms"). If you do not agree to all of these Terms, you must immediately stop using the Service. These Terms constitute a legally binding agreement between you and the legal entity ShrinQE.
             </Text>
 
             <Text style={styles.sectionTitle}>2. Description of Service</Text>
@@ -133,7 +133,7 @@ export default function TermsOfService() {
 
             <Text style={styles.sectionTitle}>15. Governing Law</Text>
             <Text style={styles.text}>
-              These Terms shall be governed by and construed in accordance with the laws of India, without regard to its conflict of law provisions. Any disputes arising from or relating to these Terms or the Service shall be subject to the exclusive jurisdiction of the courts located in New Delhi, India.
+              These Terms shall be governed by and construed in accordance with the laws of India, without regard to its conflict of law provisions. Any disputes arising from or relating to these Terms or the Service shall be subject to the exclusive jurisdiction of the courts located in Coimbatore, Tamil Nadu, India.
             </Text>
 
             <Text style={styles.sectionTitle}>16. Severability</Text>
@@ -146,7 +146,7 @@ export default function TermsOfService() {
               If you have any questions about these Terms of Service, please contact us:{'\n\n'}
               Email: saraspace006@gmail.com{'\n'}
               Website: https://shrinqe.com/contact{'\n'}
-              Location: New Delhi, India
+              Location: Coimbatore, Tamil Nadu, India
             </Text>
           </Card>
         </View>

@@ -24,7 +24,7 @@ export default function PrivacyPolicy() {
           <Card variant="glass" style={styles.card}>
             <Text style={styles.sectionTitle}>1. Introduction</Text>
             <Text style={styles.text}>
-              Welcome to ShrinQE ("we", "our", or "us"). We are committed to protecting your personal data and respecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website at shrinqe.com (the "Site") and use our services, including URL shortening, link analytics, and image processing tools.
+              Welcome to ShrinQE ("we", "our", or "us"). We are committed to protecting your personal data and respecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website at shrinqe.com (the "Site") and use our services, including URL shortening, link analytics, and image processing tools. ShrinQE is the legal entity responsible for your data.
             </Text>
             <Text style={styles.text}>
               Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the Site or use our services.
@@ -148,7 +148,7 @@ export default function PrivacyPolicy() {
               If you have any questions about this Privacy Policy, your data, or our privacy practices, please contact us:{'\n\n'}
               Email: saraspace006@gmail.com{'\n'}
               Website: https://shrinqe.com/contact{'\n'}
-              Location: New Delhi, India
+              Location: Coimbatore, Tamil Nadu, India
             </Text>
           </Card>
         </View>

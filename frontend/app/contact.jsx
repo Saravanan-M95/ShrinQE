@@ -86,7 +86,7 @@ export default function ContactUs() {
                   </View>
                   <View>
                     <Text style={styles.infoLabel}>Our Location</Text>
-                    <Text style={styles.infoValue}>New Delhi, India</Text>
+                    <Text style={styles.infoValue}>Coimbatore, Tamil Nadu, India</Text>
                   </View>
                 </View>
 
